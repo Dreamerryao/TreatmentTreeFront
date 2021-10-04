@@ -14,7 +14,7 @@ import Layout from "./components/Layout";
 import TitleBar from "./views/TitleBar/TitleBar";
 import {makeStyles} from "@material-ui/core";
 import FlowView from "./views/FlowView/FlowView";
-import TacticView from "./views/TacticView/TacticView";
+import CompareView from "./views/CompareView/CompareView";
 import SequenceView from "./views/SequenceView/SequenceView";
 import ProjectionView from "./views/ProjectionView/ProjectionView";
 import FilterView from "./views/FilterView/FilterView"
@@ -50,7 +50,7 @@ function App() {
                 </Layout>
                 <Layout container direction={'column'} padding={[0, 0, 0]} size={4}>
                     <Layout size={4}>
-                        <TacticView/>
+                        <CompareView/>
                     </Layout>
                 </Layout>
                 <Layout container direction={'column'} padding={[0, 0, 0]} size={1}>
