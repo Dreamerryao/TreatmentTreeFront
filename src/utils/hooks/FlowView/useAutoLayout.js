@@ -1,4 +1,4 @@
-import {useMemo} from "react";
+import { useMemo } from "react";
 
 
 function updateEnterDegree(enterDegrees, nodes, links) {
@@ -18,9 +18,9 @@ function findStartNodesIdx(enterDegrees) {
 function calcCutVal(graphNodes, treeEdges, treeReEdges) {
     const curNodes = graphNodes
         .filter((node, idx) => treeEdges[idx].length + treeReEdges[idx].length === 1)
-        .map(node => ({node, edge: treeEdges[node.idx].length > 0 ? treeEdges[node.idx][0] : treeReEdges[node.idx][0]}));
+        .map(node => ({ node, edge: treeEdges[node.idx].length > 0 ? treeEdges[node.idx][0] : treeReEdges[node.idx][0] }));
     while (curNodes.length > 0) {
-        const {node, edge} = curNodes.shift();
+        const { node, edge } = curNodes.shift();
         // console.log({node, edge})
         const localCutValSum = treeReEdges[node.idx].reduce((sum, edge) => {
             return sum + (edge.cutVal === null ? 0 : edge.cutVal);
@@ -40,7 +40,7 @@ function calcCutVal(graphNodes, treeEdges, treeReEdges) {
             const edge = treeEdges[newNode.idx].filter(edge => edge.cutVal === null).length > 0 ?
                 treeEdges[newNode.idx].filter(edge => edge.cutVal === null)[0] :
                 treeReEdges[newNode.idx].filter(edge => edge.cutVal === null)[0];
-            curNodes.push({node: newNode, edge});
+            curNodes.push({ node: newNode, edge });
         }
     }
 }
@@ -60,15 +60,15 @@ function feasibleTree(nodesProps, layers) {
             l: (edge) => edgeL(graphNodes[edge.t], graphNodes[edge.s]),
             s: nodeProps.idxAll,
             t: sl.targetNode.idxAll,
-         })),
+        })),
         prevNodes: []
     }))
     const rawNodeNum = graphNodes.length;
     for (let i = 0; i < rawNodeNum; ++i) {
         const node = graphNodes[i];
         node.nextNodes.forEach(nexNode => {
-            const edge1 = {w: nexNode.w, d: nexNode.d, l: (edge) => edgeL(graphNodes[edge.t], graphNodes[edge.s]), s: graphNodes.length, t: node.idx, cutVal: null};
-            const edge2 = {w: nexNode.w, d: nexNode.d, l: (edge) => edgeL(graphNodes[edge.t], graphNodes[edge.s]), s: graphNodes.length, t: nexNode.t, cutVal: null};
+            const edge1 = { w: nexNode.w, d: nexNode.d, l: (edge) => edgeL(graphNodes[edge.t], graphNodes[edge.s]), s: graphNodes.length, t: node.idx, cutVal: null };
+            const edge2 = { w: nexNode.w, d: nexNode.d, l: (edge) => edgeL(graphNodes[edge.t], graphNodes[edge.s]), s: graphNodes.length, t: nexNode.t, cutVal: null };
             const eNode = {
                 y: Math.min(node.y, graphNodes[nexNode.t].y),
                 idx: graphNodes.length,
@@ -128,7 +128,7 @@ function feasibleTree(nodesProps, layers) {
         treeReEdges[leftEdge.t].push(leftEdge);
     }
 
-    layers.forEach(({_, nodesIdx}) => {
+    layers.forEach(({ _, nodesIdx }) => {
         for (let i = 0; i < nodesIdx.length - 1; ++i) {
             const edge = {
                 w: 0,
@@ -211,9 +211,9 @@ function xCoordinate(nodesProps, layers) {
     })
 }
 
-export default function useAutoLayout(graph, {stateNodeHeight, stateNodeWidth, actionNodeWidth}, optimalLayer) {
+export default function useAutoLayout(graph, { stateNodeHeight, stateNodeWidth, actionNodeWidth }, optimalLayer) {
     //region init
-    const {nodesProps, linksProps} = useMemo(() => {
+    const { nodesProps, linksProps } = useMemo(() => {
         const nodesProps = graph.map((node, index) => [{
             data: node,
             layer: node.layer_id,
@@ -227,35 +227,35 @@ export default function useAutoLayout(graph, {stateNodeHeight, stateNodeWidth, a
             sourceLinks: [],
             targetLinks: [],
         }
-        // , node.actions.map((action, idx) => ({
-        //     data: action,
-        //     layer: node.layer_id * 2 + 1,
-        //     idx: -1,
-        //     key: node.node_id.toString() + 'a' + idx,
-        //     idxAll: -1,
-        //     x: -1,
-        //     y: -1,
-        //     width: actionNodeWidth,
-        //     height: !!action.real_action ? stateNodeHeight : stateNodeHeight * action.possibility / node.actions.reduce((sum, action) => sum + action.possibility, 0),
-        //     sourceLinks: [],
-        //     targetLinks: [],
-        // }))
+            // , node.actions.map((action, idx) => ({
+            //     data: action,
+            //     layer: node.layer_id * 2 + 1,
+            //     idx: -1,
+            //     key: node.node_id.toString() + 'a' + idx,
+            //     idxAll: -1,
+            //     x: -1,
+            //     y: -1,
+            //     width: actionNodeWidth,
+            //     height: !!action.real_action ? stateNodeHeight : stateNodeHeight * action.possibility / node.actions.reduce((sum, action) => sum + action.possibility, 0),
+            //     sourceLinks: [],
+            //     targetLinks: [],
+            // }))
         ]).flat().flat();
         const linksProps = graph.map((node, index) => node.actions.map((action, idx) => [
-        //     {
-        //     data: action,
-        //     branchRoot: node.branch_root,
-        //     sourcePoint1: [-1, -1],
-        //     sourcePoint2: [-1, -1],
-        //     targetPoint1: [-1, -1],
-        //     targetPoint2: [-1, -1],
-        //     isReal: false,
-        //     width: -1,
-        //     sourceNodeIdx: nodesProps.findIndex(nodeProps => nodeProps.key === node.node_id.toString()),
-        //     targetNodeIdx: nodesProps.findIndex(nodeProps => nodeProps.key === node.node_id.toString() + 'a' + idx),
-        //     sourceNode: nodesProps[nodesProps.findIndex(nodeProps => nodeProps.key === node.node_id.toString())],
-        //     targetNode: nodesProps[nodesProps.findIndex(nodeProps => nodeProps.key === node.node_id.toString() + 'a' + idx)],
-        // },
+            //     {
+            //     data: action,
+            //     branchRoot: node.branch_root,
+            //     sourcePoint1: [-1, -1],
+            //     sourcePoint2: [-1, -1],
+            //     targetPoint1: [-1, -1],
+            //     targetPoint2: [-1, -1],
+            //     isReal: false,
+            //     width: -1,
+            //     sourceNodeIdx: nodesProps.findIndex(nodeProps => nodeProps.key === node.node_id.toString()),
+            //     targetNodeIdx: nodesProps.findIndex(nodeProps => nodeProps.key === node.node_id.toString() + 'a' + idx),
+            //     sourceNode: nodesProps[nodesProps.findIndex(nodeProps => nodeProps.key === node.node_id.toString())],
+            //     targetNode: nodesProps[nodesProps.findIndex(nodeProps => nodeProps.key === node.node_id.toString() + 'a' + idx)],
+            // },
             action.next_nodes.map(nextNode => ({
                 data: action,
                 branchRoot: node.branch_root,
@@ -283,12 +283,12 @@ export default function useAutoLayout(graph, {stateNodeHeight, stateNodeWidth, a
             linkProps.isReal = !!linkProps.targetNode.data.real_record && !!linkProps.sourceNode.data.real_record;
         })
 
-        return {nodesProps, linksProps};
+        return { nodesProps, linksProps };
     }, [actionNodeWidth, graph, stateNodeHeight, stateNodeWidth])
     //endregion
 
     //region layer
-    const {layerCount, layers, maxLayerValue} = useMemo(() => {
+    const { layerCount, layers, maxLayerValue } = useMemo(() => {
         let maxLayerValue = 0, layers = [];
         let layer = 0;
         for (layer = 0; ; ++layer) {
@@ -351,12 +351,13 @@ export default function useAutoLayout(graph, {stateNodeHeight, stateNodeWidth, a
     //endregion
 
     //region layout config
-    const {paddingWidth, padding} = useMemo(() => {
+    const { paddingWidth, padding } = useMemo(() => {
         if (layerCount === 0) return {
             paddingWidth: 0, padding: 0
         };
 
-        const paddingWidth = 2 / (layerCount * 0.2 + layerCount - 1)// * layerCount / 2;
+        const paddingWidth = 0.2;
+        // 2 / (layerCount * 0.2 + layerCount - 1)// * layerCount / 2;
 
         // const valueHeight = 0.9 / maxLayerValue,
         const padding = 0.02;
@@ -367,7 +368,7 @@ export default function useAutoLayout(graph, {stateNodeHeight, stateNodeWidth, a
         //         1
         //     ) + 0.005;
 
-        return {paddingWidth, padding}
+        return { paddingWidth, padding }
     }, [layerCount]);
     //endregion
 
@@ -375,7 +376,7 @@ export default function useAutoLayout(graph, {stateNodeHeight, stateNodeWidth, a
     useMemo(() => {
         if (layerCount === 0) return;
 
-        layers.forEach(({sumHeight, nodesIdx}, lId) => {
+        layers.forEach(({ sumHeight, nodesIdx }, lId) => {
             const x = (stateNodeWidth + paddingWidth) * lId;
             const fullHeight = sumHeight + (nodesIdx.length - 1) * padding;
             const [startY, _] = nodesProps[nodesIdx[0]].targetLinks.length === 0 ? [0.5 - fullHeight, 0] :

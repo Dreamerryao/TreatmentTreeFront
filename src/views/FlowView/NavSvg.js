@@ -13,18 +13,28 @@ import ShortDis from './components/ShortDis';
 // }));
 
 const NavSvg = React.forwardRef((props, ref) => {
-    const { children, width, height, initialScale } = props;
+    const { children, width, height, initialScale, nodesProps } = props;
     const svg = useRef(null);
-    const { viewX, viewY, viewW, viewH, scale, reset, handleChangeScaleLevel } = useCamera(svg, width, height);
+    const rectRef = useRef(null);
+    const { viewX, viewY, viewW, viewH, scale, reset, handleChangeScaleLevel } = useCamera(svg, width, height,rectRef);
     // const classes = useStyles({ scale });
     useEffect(() => {
-        console.error("initialScale" + initialScale)
         handleChangeScaleLevel(initialScale);
     }, [initialScale])
 
-
     return <>
-        <ShortDis width={width} height={height} initialScale={initialScale} />
+        <ShortDis 
+            width={width} 
+            height={height} 
+            initialScale={initialScale} 
+            nodesProps={nodesProps} 
+            scale={scale}
+            viewX={viewX} 
+            viewY={viewY} 
+            viewW={viewW} 
+            viewH={viewH}
+            ref={rectRef}
+             />
         <svg
             ref={svg}
             // onDoubleClick={reset}

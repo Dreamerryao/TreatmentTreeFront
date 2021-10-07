@@ -83,12 +83,9 @@ const Nodes = React.memo(({
     toggleExpandedNodes
 }) => {
     console.log('refresh Nodes');
-
-
     return <g>
         {!!nodesProps ? nodesProps.map((node, nId) => {
             const props = node;
-            console.log('node', node);
             return <React.Fragment key={node.key}>
                 {node.key.includes('a')
                     ? <ActionNode vw={width} vh={height}
@@ -191,7 +188,7 @@ function FlowView({ d }) {
 
         <div ref={ref}
             style={{ width: '100%', height: '100%', position: 'relative' }}>
-            <NavSvg width={width} height={height} initialScale={initialScale} ref={gRef}>
+            <NavSvg width={width} height={height} initialScale={initialScale} ref={gRef} nodesProps={nodesProps}>
                 <Links graph={d.graph} {...{
                     linksProps,
                     width,
