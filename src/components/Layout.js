@@ -50,7 +50,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 function Layout({direction = 'row', size = 1, root=false, container = false, padding = 0, children = null, leaf=false}) {
-    const pad = (typeof(padding) === 'number') ? [padding, padding, padding] : padding;
+    const pad = (typeof padding === 'number') ? [padding, padding, padding] : padding;
     const classes = useStyles({direction, size, padding: pad});
 
     const arr = children === null ? [] : (children instanceof Array ? children.map(d => d) : [children]);
