@@ -34,7 +34,6 @@ const Nodes = React.memo(({
 }) => {
   return <g>
     {!!nodesProps ? nodesProps.map((node) => {
-      console.log('node', node);
       return <VNode node={node} scale={scale} vwidth={width} vheight={height} />
     }) : null}
   </g>

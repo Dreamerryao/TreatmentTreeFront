@@ -77,10 +77,10 @@ export default inject()(observer(function Panel({title, tools, children, setting
 
     return <div className={classes.panel}>
         <div className={classes.titleBar}>
-            {/*<div className={classes.title}>*/}
-            {/*    <Typography variant={'subtitle1'}>{title}</Typography>*/}
-            {/*    <div className={classes.triangle}/>*/}
-            {/*</div>*/}
+            <div className={classes.title}>
+               <Typography variant={'subtitle1'}>{title}</Typography>
+               <div className={classes.triangle}/>
+            </div>
             <div className={classes.tools}>
                 {!!tools && tools.map((tool, tId) => <div key={tId} className={classes.tool}>{tool}</div>)}
             </div>
