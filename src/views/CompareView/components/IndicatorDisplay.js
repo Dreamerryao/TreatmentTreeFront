@@ -8,9 +8,6 @@ const IndicatorDisplay = ({ d, compareNodes, after }) => {
 
   return after && compareNodes.length == 0 ? null : <div style={{ position: 'relative', height: '100%', overflow: 'auto' }}>
     <div style={{ display: 'flex', flexDirection: 'column' }}>
-      {/* {
-        JSON.stringify(compareNodes)
-      } */}
       {
         !!d.detailIndex[d.dataset] && d.detailIndex[d.dataset].map((v) => {
           return <div style={{ display: 'flex', margin: '10px 0' }}>

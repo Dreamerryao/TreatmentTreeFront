@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useState, useRef } from "react";
-
+import ReactDOM from 'react-dom';
 const toRealScale = (scaleLevel) => scaleLevel < 0 ? 1 / (1 - scaleLevel) : 1 + scaleLevel;
 const toRealativeScale = (v) => v < 1 ? (v - 1) / v : v - 1;
 
@@ -7,6 +7,8 @@ export default function useCamera(svgEle, width, height, rectEle) {
     const [dragAnchor, setDragAnchor] = useState(null);
     const [rectDragAnchor, setRectDragAnchor] = useState(null);
 
+    // 是否展示缩略图
+    const [displayShortChart, setDisplayShortChart] = useState(false);
     const [cursor, setCursor] = useState(null);
     const [rectCursor, setRectCursor] = useState(null);
 
@@ -37,45 +39,76 @@ export default function useCamera(svgEle, width, height, rectEle) {
         return [offsetX, offsetY]
     }, [rectCursor, rectDragAnchor, realScale])
 
-
+    const wheelTimer = useRef(null);
 
     const handleDragStart = useCallback((e) => {
-        setDragAnchor([e.clientX, e.clientY]);
-        setCursor([e.clientX, e.clientY]);
-    }, [])
+        if (dragAnchor != null) {
+            ReactDOM.unstable_batchedUpdates(() => {
+                setViewX(viewX - offsetX);
+                setViewY(viewY - offsetY);
+
+            });
+        }
+        ReactDOM.unstable_batchedUpdates(() => {
+            setDragAnchor([e.clientX, e.clientY]);
+            setCursor([e.clientX, e.clientY]);
+        });
+
+    }, [dragAnchor, offsetX, offsetY, viewX, viewY])
 
     const handleRectDragStart = useCallback((e) => {
         e.stopPropagation();
-        setRectDragAnchor([e.clientX, e.clientY]);
-        setRectCursor([e.clientX, e.clientY]);
-    }, [])
+        if (rectDragAnchor != null) {
+            ReactDOM.unstable_batchedUpdates(() => {
+                setViewX(viewX - rectOffsetX);
+                setViewY(viewY - rectOffsetY);
+            });
+        }
+        ReactDOM.unstable_batchedUpdates(() => {
+            setRectDragAnchor([e.clientX, e.clientY]);
+            setRectCursor([e.clientX, e.clientY]);
+        });
+    }, [rectDragAnchor, rectOffsetX, rectOffsetY, viewX, viewY])
 
     const handleDrag = useCallback((e) => {
+        if (e.which == 0) return;
         if (dragAnchor === null) return;
-
+        if (wheelTimer.current) clearTimeout(wheelTimer.current);
+        wheelTimer.current = setTimeout(() => {
+            setDisplayShortChart(false);
+            wheelTimer.current = null;
+        }, 1000);
+        if (!displayShortChart) setDisplayShortChart(true);
         setCursor([e.clientX, e.clientY]);
     }, [dragAnchor])
 
     const handleRectDrag = useCallback((e) => {
+        if (e.which == 0) return;
         if (rectDragAnchor === null) return;
         e.stopPropagation();
         setRectCursor([e.clientX, e.clientY]);
     }, [rectDragAnchor])
 
     const handleDragEnd = useCallback((e) => {
-        setViewX(viewX - offsetX);
-        setViewY(viewY - offsetY);
-        setDragAnchor(null);
-        setCursor(null);
+        ReactDOM.unstable_batchedUpdates(() => {
+            setViewX(viewX - offsetX);
+            setViewY(viewY - offsetY);
+            setDragAnchor(null);
+            setCursor(null);
+        });
+
     }, [offsetX, offsetY, viewX, viewY]);
 
     const handleRectDragEnd = useCallback((e) => {
         e.stopPropagation();
-        setViewX(viewX - rectOffsetX);
-        setViewY(viewY - rectOffsetY);
-        setRectCursor(null);
-        setRectDragAnchor(null);
+        ReactDOM.unstable_batchedUpdates(() => {
+            setViewX(viewX - rectOffsetX);
+            setViewY(viewY - rectOffsetY);
+            setRectCursor(null);
+            setRectDragAnchor(null);
+        });
     }, [rectOffsetY, rectOffsetX, viewX, viewY]);
+
     useEffect(() => {
         const ele = svgEle.current;
         ele.addEventListener('mousedown', handleDragStart);
@@ -101,7 +134,14 @@ export default function useCamera(svgEle, width, height, rectEle) {
     }, [handleRectDrag, handleRectDragEnd, handleRectDragStart, rectEle])
 
     const viewW = width / realScale, viewH = height / realScale;
+
     const handleWheel = useCallback((e) => {
+        if (wheelTimer.current) clearTimeout(wheelTimer.current);
+        wheelTimer.current = setTimeout(() => {
+            setDisplayShortChart(false);
+            wheelTimer.current = null;
+        }, 1000);
+        if (!displayShortChart) setDisplayShortChart(true);
         const newScaleLevel = e.deltaY < 0 ? scaleLevel + 0.05 : scaleLevel - 0.05;
         const oldRealScale = toRealScale(scaleLevel);
         const newRealScale = toRealScale(newScaleLevel);
@@ -109,10 +149,12 @@ export default function useCamera(svgEle, width, height, rectEle) {
         if (newRealScale >= initScale.current - 0.05) {
             const newViewX = viewX + (viewW - viewW / newRealScale * oldRealScale) * e.offsetX / width;
             const newViewY = viewY + (viewH - viewH / newRealScale * oldRealScale) * e.offsetY / height;
+            ReactDOM.unstable_batchedUpdates(() => {
 
-            setScaleLevel(newScaleLevel);
-            setViewX(newViewX);
-            setViewY(newViewY);
+                setScaleLevel(newScaleLevel);
+                setViewX(newViewX);
+                setViewY(newViewY);
+            })
         }
         // else {
         //     alert("不能再缩小了！")
@@ -131,6 +173,7 @@ export default function useCamera(svgEle, width, height, rectEle) {
         setScaleLevel(newScaleLevel);
         setViewX(0);
         setViewY(0);
+
         initScale.current = newV;
     }
     const reset = () => {
@@ -146,6 +189,7 @@ export default function useCamera(svgEle, width, height, rectEle) {
         viewH,
         scale: realScale,
         reset,
-        handleChangeScaleLevel
+        handleChangeScaleLevel,
+        displayShortChart
     }
 }

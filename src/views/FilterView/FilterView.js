@@ -16,6 +16,8 @@ export default inject('d')(observer(function ({d}) {
 
     const classes = useStyles();
     return <Panel title={'Filter View'}>
-        <div></div>
+        <div>
+            
+        </div>
     </Panel>;
 }));

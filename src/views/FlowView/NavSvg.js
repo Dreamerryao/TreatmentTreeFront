@@ -16,7 +16,7 @@ const NavSvg = React.forwardRef((props, ref) => {
     const { children, width, height, initialScale, nodesProps } = props;
     const svg = useRef(null);
     const rectRef = useRef(null);
-    const { viewX, viewY, viewW, viewH, scale, reset, handleChangeScaleLevel } = useCamera(svg, width, height,rectRef);
+    const { viewX, viewY, viewW, viewH, scale, reset, handleChangeScaleLevel ,displayShortChart} = useCamera(svg, width, height,rectRef);
     // const classes = useStyles({ scale });
     useEffect(() => {
         handleChangeScaleLevel(initialScale);
@@ -34,6 +34,7 @@ const NavSvg = React.forwardRef((props, ref) => {
             viewW={viewW} 
             viewH={viewH}
             ref={rectRef}
+            displayShortChart={displayShortChart}
              />
         <svg
             ref={svg}
