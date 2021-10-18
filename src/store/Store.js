@@ -155,7 +155,9 @@ class Store {
     // 比较视图
     chosenItems = [];
     setChosenItem = (item) => {
-        this.chosenItems = [...this.chosenItems, item];
+        const len = this.chosenItems.length;
+        this.chosenItems = len === 0 ? [item] : [this.chosenItems[len - 1], item];
+
     }
     removeChosenItem = (key) => {
         this.chosenItems = this.chosenItems.filter(n => n.node_id != key);

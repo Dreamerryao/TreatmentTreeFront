@@ -54,9 +54,9 @@ export default inject('d')(observer(function CompareView({ d }) {
     }, [curIndex, filterAction])
     return <Panel title="Compare View">
         <div className={classes.container}>
-            <IndicatorDisplay compareNodes={compareNodes} />
+            <IndicatorDisplay compareNodes={compareNodes} otherNodes={compareAfterNodes} />
             <FilterAction actions={filterAction} curIndex={curIndex} onClick={(i) => { setCurIndex(i) }} />
-            <IndicatorDisplay compareNodes={compareAfterNodes} after={true} />
+            <IndicatorDisplay compareNodes={compareAfterNodes} after={true} otherNodes={compareNodes} />
         </div>
     </Panel>;
 }));
