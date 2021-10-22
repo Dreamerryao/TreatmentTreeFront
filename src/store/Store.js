@@ -7,6 +7,7 @@ class Store {
     constructor() {
         makeAutoObservable(this);
         this.initData();
+        this.filterInit();
         document.oncontextmenu = e => e.preventDefault();
     }
 
@@ -161,6 +162,50 @@ class Store {
     }
     removeChosenItem = (key) => {
         this.chosenItems = this.chosenItems.filter(n => n.node_id != key);
+    }
+
+    // filter 视图
+    ageRange = [0, 100]
+    weightRange = [0, 100]
+    age = [0, 100]
+    gender = "0"
+    weight = [0, 100]
+    filterInit = () => {
+        get('/records/filter_init', null, res => {
+            if (res.succeed) {
+                this.ageRange = res['filter_index'].age;
+                this.age = res['filter_index'].age;
+                this.weightRange = res['filter_index'].weight;
+                this.weight = res['filter_index'].weight;
+                console.log(res['filter_index'])
+            } else {
+                console.error(res.info);
+            }
+        })
+    }
+    changeGender = v => {
+        this.gender = v;
+    }
+    changeAge = v => {
+        this.age = v;
+    }
+    changeWeight = v => {
+        this.weight = v;
+    }
+    
+    filterRecordsIndex = [];
+    onFilterSubmit = () => {
+        get('/records/filter', { random: 10, weight: this.weight[0] + "," + this.weight[1], gender: this.gender, age: this.age[0] + "," + this.age[1] }, res => {
+            console.log('res', res);
+            this.filterRecordsIndex = res.records_index;
+        });
+    }
+    onFilterRefresh = () => {
+        get('/records/filter_refresh', { random: 10 }, res => {
+            console.log('res', res);
+            this.filterRecordsIndex = res.records_index;
+        })
+        
     }
 }
 
