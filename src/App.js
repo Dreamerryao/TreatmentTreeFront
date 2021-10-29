@@ -48,13 +48,13 @@ function App() {
                         <FilterView/>
                     </Layout>
                 </Layout>
-                <Layout container direction={'column'} padding={[0, 0, 0]} size={4}>
-                    <Layout size={4}>
+                <Layout container direction={'column'} padding={[0, 0, 0]} size={3}>
+                    <Layout size={3}>
                         <CompareView/>
                     </Layout>
                 </Layout>
-                <Layout container direction={'column'} padding={[0, 0, 0]} size={1}>
-                    <Layout size={2}>
+                <Layout container direction={'column'} padding={[0, 0, 0]} size={2}>
+                    <Layout size={3}>
                         <SequenceView/>
                     </Layout>
                 </Layout>

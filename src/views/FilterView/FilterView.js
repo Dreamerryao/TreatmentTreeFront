@@ -58,10 +58,10 @@ export default inject('d')(observer(function ({ d }) {
             />
             {
                 d.recordsState['MIMIC-IV'] && d.filterRecordsIndex && d.filterRecordsIndex.map((rId) => {
-                    return <div style={{ display: 'flex',marginTop:10,cursor:'pointer'}} onClick={()=>{d.initData('MIMIC-IV', rId)}}>
+                    return <div key={rId} style={{ display: 'flex',marginTop:5, marginBottom:5,cursor:'pointer'}} onClick={()=>{d.initData('MIMIC-IV', rId)}}>
                         {
-                            d.recordsState['MIMIC-IV'][rId]['status'].map(record => {
-                                return <div style={{ background: parseRateColor(record.mortality,d.mortalityColor),width:10,height:10 }}> </div>
+                            d.recordsState['MIMIC-IV'][rId]['status'].map((record, eId) => {
+                                return <div key={`${rId},${eId}`} style={{ background: parseRateColor(record.mortality - 0.3 > 0.5 ? 0.5 : record.mortality - 0.3, d.mortalityColor), width:10, height:10 }}> </div>
                             })
                         }
                     </div>

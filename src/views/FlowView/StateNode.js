@@ -57,6 +57,7 @@ const StateNode = ({ d,
     targetLinks,
     onClick,
     onDoubleClick,
+    onActionClick,
     onActionDoubleClick,
     onHover,
     onUnhover }) => {
@@ -64,6 +65,7 @@ const StateNode = ({ d,
     const [hoverHighlight, setHoverHighlight] = useState(false)
 
     const mortalityColor = useRateColor(data.mortality - 0.3 > 0.5 ? 0.5 : data.mortality - 0.3, d.mortalityColor)
+    // const mortalityColor = useRateColor(data.mortality, d.mortalityColor)
 
     const innerBoxX = nodeBodyWidth / 16, innerBoxY = nodeBodyGlyphHeight / 16;
     const gridWidth = !!d.detailIndex[d.dataset] ? ((nodeBodyWidth - 2 * innerBoxX) / d.detailIndex[d.dataset].length) : 0, gridHeight = (nodeBodyGlyphHeight + nodeBodyIndexHeight) - 2 * innerBoxY;
@@ -138,6 +140,7 @@ return <g
                         width={actionWidthTotal}
                         height={actionHeight}
                         data={action}
+                        onClick={() => !!onActionClick && onActionClick(action)}
                         onDoubleClick={() => !!onActionDoubleClick && onActionDoubleClick(nodeKey + 'a' + index, action)}
                     />
                 </g>

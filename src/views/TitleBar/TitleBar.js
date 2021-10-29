@@ -52,23 +52,23 @@ export default inject('d')(observer(function TitleBar({d}) {
                   onChange={setDataset}
                   options={allDataset}>
         </MySelect>
-        <div className={classes.placeholder}/>
-        <MySelect title={'Predict Record'}
-                  value={initialRecord}
-                  onChange={setInitialRecord}
-                  options={allInitialRecord}>
-        </MySelect>
-        <Button className={classes.action}
-                disabled={!isModified}
-                color={'secondary'}
-                onClick={onCancel}>
-            <Close/>
-        </Button>
-        <Button className={classes.action}
-                disabled={!isModified}
-                color={'primary'}
-                onClick={onSubmit}>
-            <Check/>
-        </Button>
+        {/*<div className={classes.placeholder}/>*/}
+        {/*<MySelect title={'Predict Record'}*/}
+        {/*          value={initialRecord}*/}
+        {/*          onChange={setInitialRecord}*/}
+        {/*          options={allInitialRecord}>*/}
+        {/*</MySelect>*/}
+        {/*<Button className={classes.action}*/}
+        {/*        disabled={!isModified}*/}
+        {/*        color={'secondary'}*/}
+        {/*        onClick={onCancel}>*/}
+        {/*    <Close/>*/}
+        {/*</Button>*/}
+        {/*<Button className={classes.action}*/}
+        {/*        disabled={!isModified}*/}
+        {/*        color={'primary'}*/}
+        {/*        onClick={onSubmit}>*/}
+        {/*    <Check/>*/}
+        {/*</Button>*/}
     </div>;
 }));

@@ -280,6 +280,7 @@ const ActionNode = inject('d')(observer(({
     width,
     height,
     data,
+    onClick,
     onDoubleClick,
 }) => {
 
@@ -309,6 +310,9 @@ const ActionNode = inject('d')(observer(({
         }}
         onDoubleClick={() => {
             !!onDoubleClick && onDoubleClick();
+        }}
+        onClick={() => {
+            !!onClick && onClick();
         }}
         filter={hoverHighlight ? 'url(#lightShadow)' : ''}
     >

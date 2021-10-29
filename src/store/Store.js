@@ -50,12 +50,14 @@ class Store {
     detailIndex = { 'MIMIC-IV': null };
     recordsState = { 'MIMIC-IV': null };
 
-    initGraphReady = false;
+    initGraphReady = true;
     recordIndexReady = false;
     detailIndexReady = false;
     recordStateReady = false;
-    initData = (dataset = 'MIMIC-IV', initialRecord = 0) => {
-        this.initGraphReady = false;
+    initData = (dataset = 'MIMIC-IV', initialRecord = undefined) => {
+        if (!!initialRecord) {
+            this.initGraphReady = false;
+        }
         this.dataset = dataset;
 
         const getGraphInit = () => get('/graph/init', { actionslimit: this.actionsLimit, record: initialRecord }, res => {
@@ -98,8 +100,9 @@ class Store {
             })
         }
 
-
-        getGraphInit();
+        if (!!initialRecord) {
+            getGraphInit();
+        }
     };
 
     expandActionNode = (expandNodeId, expandNodeActionId) => {
@@ -195,7 +198,7 @@ class Store {
     
     filterRecordsIndex = [];
     onFilterSubmit = () => {
-        get('/records/filter', { random: 10, weight: this.weight[0] + "," + this.weight[1], gender: this.gender, age: this.age[0] + "," + this.age[1] }, res => {
+        get('/records/filter', { random: 10, weight: this.weight[0] + ',' + this.weight[1], gender: this.gender, age: this.age[0] + ',' + this.age[1] }, res => {
             console.log('res', res);
             this.filterRecordsIndex = res.records_index;
         });
@@ -205,7 +208,34 @@ class Store {
             console.log('res', res);
             this.filterRecordsIndex = res.records_index;
         })
-        
+    }
+
+    stateSequence = null;
+    actionSequence = null;
+    setStateActionSequence = (state, action) => {
+
+        if (this.stateSequence === state && this.actionSequence === action) {
+            this.stateSequence = null;
+            this.actionSequence = null;
+        }
+
+        this.stateSequence = state;
+        this.actionSequence = action;
+    }
+    getSequences = () => {
+        const occurSequences = [];
+        if (this.stateSequence === null && this.actionSequence === null) {
+            return occurSequences;
+        }
+        this.recordsState['MIMIC-IV'].forEach((r, rId) => {
+            const occurs = r.states.reduce((occurs, _, idx) => {
+                return (r.states[idx] === this.stateSequence && r.actions[idx] === this.actionSequence) ? occurs.concat(idx) : occurs;
+            }, []);
+            if (occurs.length > 0) {
+                occurSequences.push({'record': r, 'occur': occurs, rId})
+            }
+        })
+        return occurSequences;
     }
 }
 

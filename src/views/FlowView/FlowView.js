@@ -75,7 +75,7 @@ const Nodes = React.memo(({
     height,
     nodeHeadWidth, nodeBodyWidth, nodeTailWidth,
     nodeBodyGlyphHeight, nodeBodyIndexHeight,
-    onClickNode,
+    onClickAction,
     onContextMenu,
     onHoverNode,
     onUnhoverNode,
@@ -91,7 +91,6 @@ const Nodes = React.memo(({
                     ? <ActionNode vw={width} vh={height}
                         nodeKey={node.key}
                         nId={nId}
-                        onClick={() => !!onClickNode && onClickNode(node.key, props.data)}
                         onToggle={toggleExpandedNodes}
                         onHover={() => !!onHoverNode && onHoverNode(node.key, props.data)}
                         onDoubleClick={() => !props.data.real_action && !!onDoubleClick && onDoubleClick(node.key, props.data)}
@@ -100,11 +99,11 @@ const Nodes = React.memo(({
                         {...{ nodeHeadWidth, nodeBodyWidth, nodeTailWidth, nodeBodyGlyphHeight, nodeBodyIndexHeight }}
                         nodeKey={node.key}
                         nId={nId}
-                        onClick={() => !!onClickNode && onClickNode(node.key, props.data)}
                         onToggle={toggleExpandedNodes}
                         onHover={() => !!onHoverNode && onHoverNode(node.key, props.data)}
                         onUnhover={() => !!onUnhoverNode && onUnhoverNode(node.key, props.data)}
                         onDoubleClick={() => !props.data.real_record && !!onDoubleClick && onDoubleClick(node.key, props.data)}
+                        onActionClick={(action) => onClickAction(props.data, action)}
                         onActionDoubleClick={(key, data) => !!onDoubleClick && onDoubleClick(key, data)}
                         {...props} />}
             </React.Fragment>
@@ -141,6 +140,9 @@ function FlowView({ d }) {
             }
         }
     }, [d]);
+    const onClickAction = useCallback((stateData, actionData) => {
+        d.setStateActionSequence(stateData.state_id, actionData.action);
+    })
 
     const onHoverLink = (branchRoot) => {
         d.hoverBranchRoot(branchRoot);
@@ -201,6 +203,7 @@ function FlowView({ d }) {
                     nodesProps,
                     width,
                     height,
+                    onClickAction,
                     onDoubleClick,
                     onHoverNode,
                     onUnhoverNode,
