@@ -116,7 +116,7 @@ function FlowView({ d }) {
     const ref = useRef(null);
     const [width, height] = useSizeWithDefaultSize(ref);
     console.log(width, height)
-    const [nodeHeadWidth, nodeBodyWidth, nodeTailWidth] = [0.02, 0.14, 0.05];
+    const [nodeHeadWidth, nodeBodyWidth, nodeTailWidth] = [0.05, 0, 0.05];
     const [nodeBodyGlyphHeight, nodeBodyIndexHeight] = [0.2, 0.05];
     const [stateNodeHeight, stateNodeWidth, actionNodeWidth] = [nodeBodyGlyphHeight + nodeBodyIndexHeight, nodeHeadWidth + nodeBodyWidth + nodeTailWidth, 0.17];
 

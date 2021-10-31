@@ -113,21 +113,21 @@ return <g
         <rect className={clsx(classes.outerNode, classes.stroke)} />
         {/*<rect className={clsx(classes.innerNode)} />*/}
         <rect className={clsx(classes.headNode, classes.stroke)} />
-        <g transform={`translate(${vw * (nodeHeadWidth + innerBoxX)}, ${vh * innerBoxY})`}>
-            {!!data.record && !!d.detailIndex[d.dataset] && d.detailIndex[d.dataset].map((v, index) => {
-                // if (v.type === 'bin') {
-                //     return (<g transform={`translate(${vw * index * gridWidth}, 0)`} key={index}>
-                //         <GridNode vw={vw} vh={vh} width={gridWidth} height={gridHeight} valueIndex={v}
-                //                   value={data.record[0][v.column_id]}/>
-                //     </g>)
-                // } else {
-                return (<g transform={`translate(${vw * index * gridWidth}, 0)`} key={index}>
-                    <RangeNode vw={vw} vh={vh} width={gridWidth} height={gridHeight} valueIndex={v}
-                        value={data.record[0][v.column_id]} />
-                </g>)
-                // }
-            })}
-        </g>
+        {/*<g transform={`translate(${vw * (nodeHeadWidth + innerBoxX)}, ${vh * innerBoxY})`}>*/}
+        {/*    {!!data.record && !!d.detailIndex[d.dataset] && d.detailIndex[d.dataset].map((v, index) => {*/}
+        {/*        // if (v.type === 'bin') {*/}
+        {/*        //     return (<g transform={`translate(${vw * index * gridWidth}, 0)`} key={index}>*/}
+        {/*        //         <GridNode vw={vw} vh={vh} width={gridWidth} height={gridHeight} valueIndex={v}*/}
+        {/*        //                   value={data.record[0][v.column_id]}/>*/}
+        {/*        //     </g>)*/}
+        {/*        // } else {*/}
+        {/*        return (<g transform={`translate(${vw * index * gridWidth}, 0)`} key={index}>*/}
+        {/*            <RangeNode vw={vw} vh={vh} width={gridWidth} height={gridHeight} valueIndex={v}*/}
+        {/*                value={data.record[0][v.column_id]} />*/}
+        {/*        </g>)*/}
+        {/*        // }*/}
+        {/*    })}*/}
+        {/*</g>*/}
 
         <rect x={vw * (nodeHeadWidth + nodeBodyWidth)} y={0} className={clsx(classes.tailNode, classes.stroke)} />
         <g transform={`translate(${vw * (nodeHeadWidth + nodeBodyWidth)}, ${0})`}>
