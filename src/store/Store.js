@@ -158,13 +158,49 @@ class Store {
 
     // 比较视图
     chosenItems = [];
-    setChosenItem = (item) => {
-        const len = this.chosenItems.length;
-        this.chosenItems = len === 0 ? [item] : [this.chosenItems[len - 1], item];
-
+    chosenAfterItems = [];
+    setChosenItem = (node) => {
+        if (this.chosenItems.some(item => item.node_id === node.node_id)) {
+            this.chosenItems = this.chosenItems.filter(n => n.node_id !== node.node_id);
+        } else {
+            get('/records/state_pred_record', {state_id: node.state_id}, res => {
+                console.log(res);
+                if (res.succeed) {
+                    this.chosenItems = [{record: res.record, ...node}]
+                } else {
+                    console.log(res.info);
+                }
+            })
+        }
     }
-    removeChosenItem = (key) => {
-        this.chosenItems = this.chosenItems.filter(n => n.node_id != key);
+    setChosenAfterItem = (nodes, action) => {
+        const nodeIds = nodes.map(node => node.node_id);
+
+        if (action === -1 || nodeIds.length === 0) {
+            this.chosenAfterItems = []
+        }
+        else {
+            get('/graph/pred_state', {nodeid: nodeIds, nodeaction: action}, res => {
+                console.log(res)
+                if (res.succeed) {
+                    get('/records/state_pred_record', {state_id: res.state}, res => {
+                        console.log('/records/state_pred_record', res, res.record[0][0][0])
+                        if (res.succeed) {
+                            if (res.record[0][0][0] !== undefined) {
+                                console.log('res.record', res.record.map(r => ({record: r})))
+                                this.chosenAfterItems = res.record.map((r, rid) => ({record: r, mortality: res.status[rid].mortality}));
+                            } else {
+                                this.chosenAfterItems = [{record: res.record, mortality: res.status.mortality}]
+                            }
+                        } else {
+                            console.log(res.info);
+                        }
+                    })
+                } else {
+                    console.log(res.info);
+                }
+            })
+        }
     }
 
     // filter 视图
@@ -173,6 +209,8 @@ class Store {
     age = [0, 100]
     gender = "0"
     weight = [0, 100]
+    lengthRange = [0, 100]
+    length = [0, 100]
     filterInit = () => {
         get('/records/filter_init', null, res => {
             if (res.succeed) {
@@ -180,6 +218,8 @@ class Store {
                 this.age = res['filter_index'].age;
                 this.weightRange = res['filter_index'].weight;
                 this.weight = res['filter_index'].weight;
+                this.lengthRange = res['filter_index'].length;
+                this.length = res['filter_index'].length;
                 console.log(res['filter_index'])
             } else {
                 console.error(res.info);
@@ -195,10 +235,13 @@ class Store {
     changeWeight = v => {
         this.weight = v;
     }
+    changeLength = v => {
+        this.length = v;
+    }
     
     filterRecordsIndex = [];
     onFilterSubmit = () => {
-        get('/records/filter', { random: 10, weight: this.weight[0] + ',' + this.weight[1], gender: this.gender, age: this.age[0] + ',' + this.age[1] }, res => {
+        get('/records/filter', { random: 10, weight: this.weight[0] + ',' + this.weight[1], gender: this.gender, age: this.age[0] + ',' + this.age[1], length: this.length[0] + ',' + this.length[1] }, res => {
             console.log('res', res);
             this.filterRecordsIndex = res.records_index;
         });

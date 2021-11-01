@@ -8,6 +8,7 @@ import parseRateColor from "../../utils/parseRateColor";
 // import {ArrowBackIosNewIcon, ArrowForwardIosIcon} from "@mui/icons-material/";
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+import {ActionNode} from "../FlowView/GridNode";
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -43,7 +44,6 @@ const useStyles = makeStyles(theme => ({
             textAlign: 'center',
         },
         '& $td': {
-            width: 70,
             border: '1px solid white',
             padding: theme.spacing(0.5, 0.2),
             transition: 'width 0.3s ease',
@@ -99,7 +99,7 @@ export default inject('d')(observer(function SequenceView({d}) {
     const classes = useStyles();
     const oneHeight = 20;
     const oneWidth = 20;
-    return <Panel title={'Attribute View'} tools={[
+    return <Panel title={'Sequence View'} tools={[
         <Button className={classes.action}
                 color={'primary'}
                 onClick={() => setOccurPos(occurPos > 0 ? occurPos - 1 : occurPos)}
@@ -122,20 +122,41 @@ export default inject('d')(observer(function SequenceView({d}) {
                         return <div key={rId} className={clsx(classes.tbody, classes.tr)}>
                             {
                                 Array(maxOccur - occur[occurPos < occur.length ? occurPos : (occur.length - 1)]).fill(0).map(_ =>
-                                    <div className={clsx(classes.sequenceBlank, classes.td)} style={{width: oneWidth, height: oneHeight}}/>)
+                                    <div className={clsx(classes.sequenceBlank, classes.td)} style={{width: oneWidth * 2, height: oneHeight}}/>)
                             }
                             {
-                                record['status'].map((record, eId) => {
-                                    return <div key={`${rId},${eId}`}
-                                                onClick={()=>{d.initData('MIMIC-IV', rId)}}
-                                                style={{
-                                                    background: parseRateColor(record.mortality - 0.3 > 0.5 ? 0.5 : record.mortality - 0.3, d.mortalityColor),
-                                                    width: oneWidth,
-                                                    height: oneHeight,
-                                                    border: occur.includes(eId) ? '2px dotted rgb(212,78,64)' : '1px solid white'
-                                                }}
-                                                className={clsx( classes.td)}/>
+                                record['status'].map((status, eId) => {
+                                    return <div style={{
+                                        border: occur.includes(eId) ? '2px solid rgb(212,78,64)' : '1px solid white',
+                                        display: 'flex',
+                                        margin: 0,
+                                        padding: 0,
+                                        width: oneWidth * 2,
+                                        height: oneHeight + 5,
+                                    }} className={clsx( classes.td)}>
+                                         <div key={`${rId},${eId}`}
+                                             onClick={()=>{d.initData('MIMIC-IV', rId)}}
+                                             style={{
+                                                 background: parseRateColor(status.mortality - 0.3 > 0.5 ? 0.5 : status.mortality - 0.3, d.mortalityColor),
+                                                 width: oneWidth,
+                                                 height: oneHeight,
+                                                 border: '1px solid black'
+                                             }}/>
 
+                                         <svg width={oneWidth}
+                                              height={oneHeight}
+                                              style={{border: '1px solid black'}}
+                                         >
+                                             <ActionNode
+                                                 vw={1}
+                                                 vh={1}
+                                                 width={oneWidth}
+                                                 height={oneHeight}
+                                                 x={0}
+                                                 y={0}
+                                                 data={{action: record['actions'][eId]}}/>
+                                         </svg>
+                                    </div>
                                 })
                             }
                         </div>

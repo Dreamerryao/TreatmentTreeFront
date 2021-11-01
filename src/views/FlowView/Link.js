@@ -4,7 +4,7 @@ import {CSSTransition} from 'react-transition-group';
 import useFlow from "../../utils/hooks/FlowView/useFlow";
 import clsx from "clsx";
 import {inject, observer} from "mobx-react";
-import useRateColor from "../../utils/hooks/FlowView/useColor";
+import getRateColor from "../../utils/hooks/FlowView/useColor";
 
 const useStyles = makeStyles((theme) => createStyles({
     background: {
@@ -48,7 +48,7 @@ const Link = ({
     const targetMidPoint = [(targetPoint1[0] + targetPoint2[0]) / 2, (targetPoint1[1] + targetPoint2[1]) / 2];
     // const path = useFlow(sourcePoint1, sourcePoint2, [targetPoint1[0], targetMidPoint[1] - width / 2], [targetPoint2[0], targetMidPoint[1] + width / 2], vw, vh);
     const path = useFlow(sourcePoint1, sourcePoint2, targetPoint1, targetPoint2, vw, vh);
-    const mortalityColor = useRateColor(targetNode.data.mortality - 0.3 > 0.5 ? 0.5 : targetNode.data.mortality - 0.3, d.mortalityColor)
+    const mortalityColor = getRateColor(targetNode.data.mortality - 0.3 > 0.5 ? 0.5 : targetNode.data.mortality - 0.3, d.mortalityColor)
 
     const backgroundOpacity = useRef(0);
 

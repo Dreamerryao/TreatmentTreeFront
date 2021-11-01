@@ -41,18 +41,14 @@ export default inject('d')(observer(function CompareView({ d }) {
     }, [actions])
 
     const [curIndex, setCurIndex] = React.useState(0);
-    const [compareAfterNodes, setAfterNodes] = React.useState([]);
+    // const [compareAfterNodes, setAfterNodes] = React.useState([]);
     React.useEffect(() => {
-        const action = !!filterAction && filterAction[curIndex];
+        const action = !!filterAction ? filterAction[curIndex] : -1;
         console.log('action', action)
-        const afterNodes = !!action && compareNodes.map(x => {
-            console.log('x.actions.filter(n=>n.action==action)[0].next_nodes', x.actions.filter(n => n.action == action)[0].next_nodes)
-            return d.graph.find(node => x.actions.filter(n => n.action == action)[0].next_nodes.indexOf(node.node_id) !== -1) ?? null;
-        })
-        console.log('afterNodes', afterNodes);
-        setAfterNodes((afterNodes || []).filter(Boolean));
-    }, [curIndex, filterAction])
-    return <Panel title="Compare View">
+        d.setChosenAfterItem(compareNodes, action);
+    }, [compareNodes, curIndex, filterAction])
+    const compareAfterNodes = d.chosenAfterItems;
+    return <Panel title="Detail View">
         <div className={classes.container}>
             <IndicatorDisplay compareNodes={compareNodes} otherNodes={compareAfterNodes} />
             <FilterAction actions={filterAction} curIndex={curIndex} onClick={(i) => { setCurIndex(i) }} />

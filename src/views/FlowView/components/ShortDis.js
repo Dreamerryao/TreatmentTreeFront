@@ -2,7 +2,7 @@ import {
   makeStyles,
 } from '@material-ui/core';
 import { mortalityColor } from '../../../constants';
-import useRateColor from '../../../utils/hooks/FlowView/useColor';
+import getRateColor from '../../../utils/hooks/FlowView/useColor';
 import React from 'react';
 import classnames from 'classnames';
 const useStyles = makeStyles(theme => ({
@@ -58,7 +58,7 @@ const useStyles = makeStyles(theme => ({
 
 const VNode = React.memo(({ node, scale, vwidth, vheight }) => {
   const { data, x, y, width, height } = node;
-  const color = useRateColor(data.mortality - 0.3 > 0.5 ? 0.5 : data.mortality - 0.3, mortalityColor);
+  const color = getRateColor(data.mortality - 0.3 > 0.5 ? 0.5 : data.mortality - 0.3, mortalityColor);
   return <rect fill={color} x={x * vwidth * scale} y={y * vheight * scale} width={width * vwidth * scale} height={height * vheight * scale}>
   </rect>
 })
