@@ -84,6 +84,10 @@ const useActionStyles = makeStyles((theme) => createStyles({
     },
     stroke: {
         fill: 'none',
+    },
+    selected: {
+        stroke: props => props.highlight,
+        strokeWidth: 4,
     }
 }))
 
@@ -299,11 +303,13 @@ const ActionNode = inject('d')(observer(({
     width,
     height,
     data,
+    selectNode,
     onClick,
     onDoubleClick,
 }) => {
 
     const [hoverHighlight, setHoverHighlight] = useState(false);
+    const clickHighlight = !!selectNode && selectNode && d.actionSequence !== null && d.actionSequence === data.action;
 
     const gridWidth = width / 5 * vw;
     const gridHeight = height / 2 * vh;
@@ -317,7 +323,8 @@ const ActionNode = inject('d')(observer(({
     const classes = useActionStyles({
         actionColor: d.actionColor,
         gridWidth,
-        gridHeight
+        gridHeight,
+        highlight: 'rgb(212,78,64)'
     });
 
     function ActionRect() {
@@ -339,7 +346,7 @@ const ActionNode = inject('d')(observer(({
             <rect width={width * vw} height={height * vh / 2} className={classes.grid}/>
             <rect transform={`translate(${0}, ${height * vh / 2})`} width={width * vw} height={height * vh / 2} className={classes.grid}/>
             {[0,1,2,3,4].map(idx => (
-                <g transform={`translate(${gridWidth * idx}, ${0})`} key={idx}>
+                <g key={idx} transform={`translate(${gridWidth * idx}, ${0})`} key={idx}>
                     <rect key={`${idx},${0}`} width={gridWidth} height={gridHeight}
                           className={clsx(classes.outerGrid)}
                     />
@@ -350,7 +357,7 @@ const ActionNode = inject('d')(observer(({
                 </g>
             ))}
             {[0,1,2,3,4].map(idx => (
-                <g transform={`translate(${gridWidth * idx}, ${gridHeight})`} key={idx}>
+                <g key={idx} transform={`translate(${gridWidth * idx}, ${gridHeight})`} key={idx}>
                     <rect key={`${idx},${1}`} width={gridWidth} height={gridHeight}
                           className={clsx(classes.outerGrid)}
                     />
@@ -360,6 +367,9 @@ const ActionNode = inject('d')(observer(({
                     })}/>
                 </g>
             ))}
+            <rect width={width * vw} height={height * vh} className={clsx(classes.stroke, {
+                [classes.selected]: clickHighlight
+            })}/>
         </g>
     }
 

@@ -6,7 +6,7 @@ const IndicatorDisplay = ({ d, compareNodes, after, otherNodes }) => {
 
     const width = 200;
     // 定高
-    const height = 20;
+    const height = 25;
     // const height = 10 + compareNodes.length * 10;
 
     // const colors = ['#c41c00', '#ff5722'];
@@ -25,14 +25,14 @@ const IndicatorDisplay = ({ d, compareNodes, after, otherNodes }) => {
         })
       }
     </div> */}
-        <svg width={after ? 200 : 320} height={25 * (d.detailIndex[d.dataset]?.length ?? 1) - 5}>
+        <svg width={after ? 210 : 325} height={25 * (d.detailIndex[d.dataset]?.length ?? 1) - 5} viewBox={after ? `-5 0 210 ${25 * (d.detailIndex[d.dataset]?.length ?? 1) - 5}` : ''}>
             {
                 !!d.detailIndex[d.dataset] && d.detailIndex[d.dataset].map((v, vid) => {
                     const itemWidthRange = [v.range[0], v.range[1]];
                     return <g key={vid}>
-                        {!after && <text textAnchor="end" x="110" y={5 * vid + 20 * (vid + 1) - 5}>{v.column_name}:</text>}
-                        <rect x={after ? 0 : 120} y={25 * vid} width={width} height={height} fill="rgb(233,233,233)"></rect>
-                        <rect x={(after ? 0 : 120) + width * (v.bins[0] - itemWidthRange[0]) / (itemWidthRange[1] - itemWidthRange[0])} y={25 * vid} width={width * (v.bins[1] - v.bins[0]) / (itemWidthRange[1] - itemWidthRange[0])} height={height} fill="rgba(133,133,133,0.3)"></rect>
+                        {!after && <text textAnchor="end" x="110" y={5 * vid + 20 * (vid + 1) - 5}>{v.column_name}</text>}
+                        <rect x={(after ? 0 : 120) - 5} y={25 * vid} width={width+10} height={height} fill="rgb(133,133,133)"></rect>
+                        <rect x={(after ? 0 : 120) + width * (v.bins[0] - itemWidthRange[0]) / (itemWidthRange[1] - itemWidthRange[0])} y={25 * vid} width={width * (v.bins[1] - v.bins[0]) / (itemWidthRange[1] - itemWidthRange[0])} height={height} fill="rgba(33,33,33,0.3)"></rect>
                         {
                             compareNodes.map((data, did) => {
                                 const value = !!data.record ? data.record[0][v.column_id] : 0;

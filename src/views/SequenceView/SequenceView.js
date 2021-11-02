@@ -9,6 +9,7 @@ import parseRateColor from "../../utils/parseRateColor";
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import {ActionNode} from "../FlowView/GridNode";
+import ButtonGroup from "@material-ui/core/ButtonGroup";
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -45,7 +46,7 @@ const useStyles = makeStyles(theme => ({
         },
         '& $td': {
             border: '1px solid white',
-            padding: theme.spacing(0.5, 0.2),
+            // padding: theme.spacing(0.5, 0.2),
             transition: 'width 0.3s ease',
             flexShrink: 0,
         },
@@ -84,6 +85,22 @@ const useStyles = makeStyles(theme => ({
     sequenceValue: {
         display: 'flex'
     },
+    buttonBox: {
+        display: 'flex',
+        alignItems: 'center',
+        textAlign: 'center',
+        height: '100%',
+    },
+    button: {
+        fontSize: 12,
+        height: '100%'
+    },
+    action: {
+        minWidth: 0,
+        height: 32,
+        width: 32,
+    }
+
 }));
 
 export default inject('d')(observer(function SequenceView({d}) {
@@ -92,7 +109,7 @@ export default inject('d')(observer(function SequenceView({d}) {
     const [occurPos, setOccurPos] = useState(0);
 
     const occurSequences = d.getSequences();
-    const maxOccur = occurSequences.reduce((maxOccur, {occur}) => Math.max(maxOccur, occur[0]), 0);
+    const maxOccur = occurSequences.reduce((maxOccur, {occur}) => Math.max(maxOccur, occur[occurPos < occur.length ? occurPos : (occur.length - 1)]), 0);
 
     const maxOccurSize = occurSequences.reduce((maxOccur, {occur}) => Math.max(maxOccur, occur.length), 0);
 
@@ -100,13 +117,23 @@ export default inject('d')(observer(function SequenceView({d}) {
     const oneHeight = 20;
     const oneWidth = 20;
     return <Panel title={'Sequence View'} tools={[
+        <div className={classes.buttonBox}>
+            <ButtonGroup size="small" aria-label="text button group" className={classes.button}>
+                <Button variant={d.partOfSequence.includes(0) ? 'contained' : 'outlined'} className={classes.button} onClick={() => d.setPartOfSequence(0)}>Front</Button>
+                <Button variant={d.partOfSequence.includes(1) ? 'contained' : 'outlined'} className={classes.button} onClick={() => d.setPartOfSequence(1)}>Middle</Button>
+                <Button variant={d.partOfSequence.includes(2) ? 'contained' : 'outlined'} className={classes.button} onClick={() => d.setPartOfSequence(2)}>Rear</Button>
+            </ButtonGroup>
+        </div>,
         <Button className={classes.action}
+                size="small"
                 color={'primary'}
                 onClick={() => setOccurPos(occurPos > 0 ? occurPos - 1 : occurPos)}
         >
             <ArrowBackIosIcon />
-        </Button>,
+        </Button>
+        ,
         <Button className={classes.action}
+                size="small"
                 color={'primary'}
                 onClick={() => setOccurPos(occurPos < maxOccurSize - 1 ? occurPos + 1 : occurPos)}
         >
@@ -117,21 +144,19 @@ export default inject('d')(observer(function SequenceView({d}) {
             <div className={classes.table}>
                 {
                     occurSequences.map(({record, occur, rId}) => {
-                        console.log(occur, record, rId)
-                        console.log(occurPos < occur.length ? occurPos : (occur.length - 1))
                         return <div key={rId} className={clsx(classes.tbody, classes.tr)}>
                             {
-                                Array(maxOccur - occur[occurPos < occur.length ? occurPos : (occur.length - 1)]).fill(0).map(_ =>
-                                    <div className={clsx(classes.sequenceBlank, classes.td)} style={{width: oneWidth * 2, height: oneHeight}}/>)
+                                Array(maxOccur - occur[occurPos < occur.length ? occurPos : (occur.length - 1)]).fill(0).map((_, _id) =>
+                                    <div key={_id} className={clsx(classes.sequenceBlank, classes.td)} style={{width: oneWidth * 2.2, height: oneHeight}}/>)
                             }
                             {
                                 record['status'].map((status, eId) => {
-                                    return <div style={{
+                                    return <div key={`${rId},${eId}`} style={{
                                         border: occur.includes(eId) ? '2px solid rgb(212,78,64)' : '1px solid white',
                                         display: 'flex',
                                         margin: 0,
                                         padding: 0,
-                                        width: oneWidth * 2,
+                                        width: oneWidth * 2.2,
                                         height: oneHeight + 5,
                                     }} className={clsx( classes.td)}>
                                          <div key={`${rId},${eId}`}
@@ -143,7 +168,7 @@ export default inject('d')(observer(function SequenceView({d}) {
                                                  border: '1px solid black'
                                              }}/>
 
-                                         <svg width={oneWidth}
+                                         <svg width={oneWidth * 1.2}
                                               height={oneHeight}
                                               style={{border: '1px solid black'}}
                                          >

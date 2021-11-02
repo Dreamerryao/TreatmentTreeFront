@@ -141,7 +141,7 @@ function FlowView({ d }) {
         }
     }, [d]);
     const onClickAction = useCallback((stateData, actionData) => {
-        d.setStateActionSequence(stateData.state_id, actionData.action);
+        d.setStateActionSequence(stateData, actionData.action);
     })
 
     const onHoverLink = (branchRoot) => {

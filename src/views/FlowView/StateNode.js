@@ -36,6 +36,13 @@ const useStyles = makeStyles((theme) => createStyles({
         height: ({ height, innerBoxY }) => height - innerBoxY * 2,
         x: ({ innerBoxX }) => innerBoxX,
         y: ({ innerBoxY }) => innerBoxY,
+    },
+    noFill: {
+        fill: 'none',
+    },
+    selected: {
+        stroke: props => props.highlight[0],
+        strokeWidth: 4,
     }
 }));
 
@@ -88,6 +95,8 @@ const StateNode = ({ d,
         innerBoxY: innerBoxY * vh,
     });
 
+    console.log(d.chosenItems.findIndex(n => n.node_id === nodeKey))
+
     const colorMap = ['','url(#shadow)','url(#lightShadow)'];
     return <g
         onMouseEnter={() => {
@@ -98,24 +107,24 @@ const StateNode = ({ d,
             !!onUnhover && onUnhover();
             setHoverHighlight(false)
         }}
-        onClick={() => {
-
-            d.setChosenItem(data);
-
-            // d.chosenItems.findIndex(n => n.node_id == nodeKey) == 0 - 1 ?
-            //     d.setChosenItem(d.graph.filter(node => node.node_id == nodeKey)[0]) :
-            //     d.removeChosenItem(nodeKey)
-        }}
         // onDoubleClick={() => {
         //     !!onDoubleClick && onDoubleClick();
         // }}
-        filter={hoverHighlight ? 'url(#lightShadow)' : colorMap[d.chosenItems.findIndex(n => n.node_id == nodeKey)+1]}
+        filter={hoverHighlight ? 'url(#lightShadow)' : ''}
         >
         <g transform={`translate(${vw * x}, ${vh * y})`} style={//!!data.new ? {transition: 'opacity 3s ease-in'} :
             { transition: '2s' }}>
             <rect className={clsx(classes.outerNode, classes.stroke)} />
             {/*<rect className={clsx(classes.innerNode)} />*/}
-            <rect className={clsx(classes.headNode, classes.stroke)} />
+            <rect className={clsx(classes.headNode, classes.stroke)}
+                  onClick={() => {
+
+                      d.setChosenItem(data);
+
+                      // d.chosenItems.findIndex(n => n.node_id == nodeKey) == 0 - 1 ?
+                      //     d.setChosenItem(d.graph.filter(node => node.node_id == nodeKey)[0]) :
+                      //     d.removeChosenItem(nodeKey)
+                  }}/>
             {/*<g transform={`translate(${vw * (nodeHeadWidth + innerBoxX)}, ${vh * innerBoxY})`}>*/}
             {/*    {!!data.record && !!d.detailIndex[d.dataset] && d.detailIndex[d.dataset].map((v, index) => {*/}
             {/*        // if (v.type === 'bin') {*/}
@@ -143,12 +152,16 @@ const StateNode = ({ d,
                             width={actionWidthTotal}
                             height={actionHeight}
                             data={action}
+                            selectNode={!!d.stateSequence && d.stateSequence.node_id === data.node_id}
                             onClick={() => !!onActionClick && onActionClick(action)}
                             onDoubleClick={() => !!onActionDoubleClick && onActionDoubleClick(nodeKey + 'a' + index, action)}
                         />
                     </g>
                 })}
             </g>
+            <rect width={nodeHeadWidth * vw} height={height * vh} className={clsx(classes.noFill, {
+                [classes.selected]: d.chosenItems.findIndex(n => n.node_id === data.node_id) !== -1
+            })}/>
 
         </g>
     </g >

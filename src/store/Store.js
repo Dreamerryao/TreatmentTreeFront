@@ -13,7 +13,7 @@ class Store {
 
     //region Color Encoding
     mortalityColor = ['rgb(212,78,64)', 'rgb(86,165,92)'];
-    highlight = ['red', '#f39189'];
+    highlight = ['rgb(212,78,64)', '#f39189'];
     actionColor = ['rgb(78,131,237)', 'rgb(241,190,65)'];
     branchColor = [
         // 'rgb(141,211,199)',
@@ -176,7 +176,7 @@ class Store {
     setChosenAfterItem = (nodes, action) => {
         const nodeIds = nodes.map(node => node.node_id);
 
-        if (action === -1 || nodeIds.length === 0) {
+        if (action === -1 || nodeIds.length === 0 || action === undefined) {
             this.chosenAfterItems = []
         }
         else {
@@ -255,24 +255,36 @@ class Store {
 
     stateSequence = null;
     actionSequence = null;
-    setStateActionSequence = (state, action) => {
+    partOfSequence = [0,1,2];
+    setPartOfSequence = (part) => {
+        if (this.partOfSequence.includes(part)) {
+            this.partOfSequence = this.partOfSequence.filter(p => p !== part);
+        } else {
+            this.partOfSequence = this.partOfSequence.concat([part]);
+        }
+    }
+    setStateActionSequence = (data, action) => {
 
-        if (this.stateSequence === state && this.actionSequence === action) {
+        if (!!this.stateSequence && this.stateSequence.node_id === data.node_id && this.actionSequence === action) {
             this.stateSequence = null;
             this.actionSequence = null;
         }
 
-        this.stateSequence = state;
+        this.stateSequence = data;
         this.actionSequence = action;
     }
     getSequences = () => {
         const occurSequences = [];
+        const isPartOfSequence = (this.partOfSequence.slice().sort()).map(v => (len, idx) => idx >= v * len / 3 && idx <= (v + 1) * len / 3);
         if (this.stateSequence === null && this.actionSequence === null) {
             return occurSequences;
         }
         this.recordsState['MIMIC-IV'].forEach((r, rId) => {
             const occurs = r.states.reduce((occurs, _, idx) => {
-                return (r.states[idx] === this.stateSequence && r.actions[idx] === this.actionSequence) ? occurs.concat(idx) : occurs;
+                if (isPartOfSequence.some(f => f(r.states.length, idx))) {
+                    return (r.states[idx] === this.stateSequence.state_id && r.actions[idx] === this.actionSequence) ? occurs.concat(idx) : occurs;
+                }
+                return occurs;
             }, []);
             if (occurs.length > 0) {
                 occurSequences.push({'record': r, 'occur': occurs, rId})
