@@ -46,7 +46,11 @@ Click on an action where the indices of Vasopressor and Intravenous are to show 
 
 <img width="60%" src="./assets/detailview.png"/>
 
+In the select box on the top of the view, we can select the features show below.
+
 Click on an action to show other outcomes after different treatment policy.
+
+The arrows show the cahnges of features after the action you select. 
 
 ###Sequence View
 
