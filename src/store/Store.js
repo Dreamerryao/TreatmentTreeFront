@@ -12,6 +12,7 @@ class Store {
     }
 
     //region Color Encoding
+    colors = ['rgb(212,78,64)', 'rgb(86,165,92)', 'rgb(78,131,237)', 'rgb(241,190,65)'];
     mortalityColor = ['rgb(212,78,64)', 'rgb(86,165,92)'];
     highlight = ['rgb(212,78,64)', '#f39189'];
     actionColor = ['rgb(78,131,237)', 'rgb(241,190,65)'];
@@ -157,6 +158,20 @@ class Store {
     unhoverBranchRoot = () => { this.highlightBranchRoot = null; }
 
     // 比较视图
+    interestFeatures = ['PaO2_FiO2',
+        'SysBP',
+        'GCS',
+        'WBC_count',
+        'Shock_Index',
+        'Arterial_BE',
+        'Creatinine',
+        'Calcium',
+        'Platelets_count',
+        'input4hourly',
+        'output4hourly'];
+    setInterestFeatures = (values) => {
+        this.interestFeatures = values;
+    }
     chosenItems = [];
     chosenAfterItems = [];
     setChosenItem = (node) => {

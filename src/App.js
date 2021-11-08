@@ -53,7 +53,7 @@ function App() {
                         <CompareView/>
                     </Layout>
                 </Layout>
-                <Layout container direction={'column'} padding={[0, 0, 0]} size={2}>
+                <Layout container direction={'column'} padding={[0, 0, 0]} size={3}>
                     <Layout size={3}>
                         <SequenceView/>
                     </Layout>

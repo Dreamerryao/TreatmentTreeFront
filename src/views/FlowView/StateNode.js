@@ -101,11 +101,11 @@ const StateNode = ({ d,
     return <g
         onMouseEnter={() => {
             !!onHover && onHover();
-            setHoverHighlight(true)
+            // setHoverHighlight(true)
         }}
         onMouseLeave={() => {
             !!onUnhover && onUnhover();
-            setHoverHighlight(false)
+            // setHoverHighlight(false)
         }}
         // onDoubleClick={() => {
         //     !!onDoubleClick && onDoubleClick();

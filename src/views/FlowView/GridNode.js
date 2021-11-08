@@ -330,10 +330,10 @@ const ActionNode = inject('d')(observer(({
     function ActionRect() {
         return <g
             onMouseEnter={() => {
-                setHoverHighlight(true)
+                // setHoverHighlight(true)
             }}
             onMouseLeave={() => {
-                setHoverHighlight(false)
+                // setHoverHighlight(false)
             }}
             onDoubleClick={() => {
                 !!onDoubleClick && onDoubleClick();

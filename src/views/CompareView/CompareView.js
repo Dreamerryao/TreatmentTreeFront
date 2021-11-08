@@ -1,9 +1,17 @@
 import React, { useRef } from 'react';
 import { inject, observer } from 'mobx-react';
-import { makeStyles } from '@material-ui/core';
+import {makeStyles, Typography} from '@material-ui/core';
 import Panel from "../../components/Panel";
 import IndicatorDisplay from './components/IndicatorDisplay';
 import FilterAction from './components/FilterAction';
+import MySelect from "../TitleBar/MySelect";
+import FormControl from "@material-ui/core/FormControl";
+import InputLabel from "@material-ui/core/InputLabel";
+import Select from "@material-ui/core/Select";
+import OutlinedInput from "@material-ui/core/OutlinedInput";
+import MenuItem from "@material-ui/core/MenuItem";
+import Checkbox from "@material-ui/core/Checkbox";
+import ListItemText from "@material-ui/core/ListItemText";
 
 
 const useStyles = makeStyles(theme => ({
@@ -15,6 +23,10 @@ const useStyles = makeStyles(theme => ({
         display: 'flex',
         alignItems: 'center',
         position: 'relative'
+    },
+    title: {
+        lineHeight: '32px',
+        marginRight: theme.spacing(1),
     },
 
 }));
@@ -48,11 +60,37 @@ export default inject('d')(observer(function CompareView({ d }) {
         d.setChosenAfterItem(compareNodes, action);
     }, [compareNodes, curIndex, filterAction])
     const compareAfterNodes = d.chosenAfterItems;
-    return <Panel title="Detail View">
+
+    const targets = d.interestFeatures;
+    const setTargets = ({
+                            target: { value },
+                        }) => d.setInterestFeatures(value);
+    const allOptions = !!d.detailIndex[d.dataset] ? d.detailIndex[d.dataset].map(index => index['column_name']) : [];
+    return <Panel title="Detail View" tools={[
+            <Typography className={classes.title}>Features of Interest:</Typography>,
+            <div>
+                <FormControl>
+                    <Select
+                        labelId="demo-multiple-checkbox-label"
+                        id="demo-multiple-checkbox"
+                        multiple
+                        value={targets}
+                        onChange={setTargets}
+                        renderValue={(selected) => selected.join(', ').slice(0, 10).concat('...')}
+                    >
+                        {allOptions.map((name) => (
+                            <MenuItem key={name} value={name}>
+                                <Checkbox checked={targets.indexOf(name) > -1} />
+                                <ListItemText primary={name} />
+                            </MenuItem>
+                        ))}
+                    </Select>
+                </FormControl>
+            </div>]}>
         <div className={classes.container}>
             <IndicatorDisplay compareNodes={compareNodes} otherNodes={compareAfterNodes} />
             <FilterAction actions={filterAction} curIndex={curIndex} onClick={(i) => { setCurIndex(i) }} />
-            <IndicatorDisplay compareNodes={compareAfterNodes} after={true} otherNodes={compareNodes} />
+            {/*<IndicatorDisplay compareNodes={compareAfterNodes} after={true} otherNodes={compareNodes} />*/}
         </div>
     </Panel>;
 }));
