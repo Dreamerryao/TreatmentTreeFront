@@ -165,7 +165,7 @@ function FlowView({ d }) {
         if (gRef.current) {
             setInitialScale(_pNum(width / gRef.current.getBBox().width, 1));
         }
-    }, [gRef.current, nodesProps])
+    }, [nodesProps, width])
 
 
     return <Panel title={'Tree View'} tools={[

@@ -20,7 +20,8 @@ const useStyles = makeStyles((theme) => createStyles({
     highlightBackground: {
         fill: ({mortalityColor}) => mortalityColor,
         stroke: ({mortalityColor}) => darken(mortalityColor, 0.5),
-        fillOpacity: 1,
+        fillOpacity: ({highlightBackgroundOpacity}) => highlightBackgroundOpacity.current,
+        strokeOpacity: ({highlightBackgroundOpacity}) => highlightBackgroundOpacity.current,
     },
 }));
 
@@ -51,6 +52,7 @@ const Link = ({
     const mortalityColor = getRateColor(targetNode.data.mortality - 0.3 > 0.5 ? 0.5 : targetNode.data.mortality - 0.3, d.mortalityColor)
 
     const backgroundOpacity = useRef(0);
+    const highlightBackgroundOpacity = useRef(0);
 
     let animationName = `animation${Math.round(Math.random() * 100)}`;
     let keyframes =
@@ -58,16 +60,24 @@ const Link = ({
         0% {fill-opacity: ${backgroundOpacity.current}}
         100% {fill-opacity: 0.2}
     }`;
+
+    let highlightAnimationName = `animation${Math.round(Math.random() * 100)}`;
+    let highlightKeyframes =
+        `@keyframes ${highlightAnimationName} {
+        0% {fill-opacity: ${highlightBackgroundOpacity.current}}
+        100% {fill-opacity: 1}
+    }`;
     let styleSheet = document.styleSheets[0];
     styleSheet.insertRule(keyframes, styleSheet.cssRules.length);
 
     useEffect(() => {
         // return () => {
         backgroundOpacity.current = 0.2;
+        highlightBackgroundOpacity.current = 1
         // }
     })
 
-    const classes = useStyles({mortalityColor, fillColor: branchColorMap[branchRoot], backgroundOpacity});
+    const classes = useStyles({mortalityColor, fillColor: branchColorMap[branchRoot], backgroundOpacity, highlightBackgroundOpacity});
     return (
             <g onClick={() => {!!onClick && onClick();}}
                onMouseEnter={() => {!!onHover && !isReal && onHover()}}
@@ -87,6 +97,8 @@ const Link = ({
                 {branchRoot === d.highlightBranchRoot && !isReal ?
                     <path d={path}
                           className={classes.highlightBackground}
+                          style={//!!data.new ? {transition: 'opacity 3s ease-in'} :
+                              {transition: 'd 2s', d: `path("${path}")`, animation: `${animationName} 1s linear 1 1.5s forwards`}}
                     /> : null}
             </g>);
 };

@@ -38,7 +38,9 @@ Click the refresh button to get some new sequences.
 
 Click on a green or red square to explore it in detail view.
 
-Click on an action where the indices of Vasopressor and Intravenous are to show other similar policy in sequence view.
+Right-click on an action where the indices of Vasopressor and Intravenous are to show other similar policy in sequence view.
+
+Double click on an action to expand the node.
 
 *TODO: fix the real record in the top of the view to make comparison easier.* 
 

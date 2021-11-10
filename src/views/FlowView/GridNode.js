@@ -338,7 +338,7 @@ const ActionNode = inject('d')(observer(({
             onDoubleClick={() => {
                 !!onDoubleClick && onDoubleClick();
             }}
-            onClick={() => {
+            onContextMenu={() => {
                 !!onClick && onClick();
             }}
             filter={hoverHighlight ? 'url(#lightShadow)' : ''}

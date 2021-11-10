@@ -2,6 +2,24 @@ import React from 'react';
 import { inject, observer } from 'mobx-react';
 import parseRateColor from '../../../utils/parseRateColor';
 import getRateColor from "../../../utils/hooks/FlowView/useColor";
+import makeStyles from "@material-ui/core/styles/makeStyles";
+import createStyles from "@mui/material/styles/createStyles";
+import Tooltip from "@material-ui/core/Tooltip";
+
+const useStyle = makeStyles(() => createStyles({
+    tooltip: {
+        maxWidth: 'none',
+    },
+    tipTable: {
+        '& > tbody > tr > th': {
+            textAlign: 'right'
+        },
+        '& > tbody > tr > td': {
+            textAlign: 'left'
+        },
+    }
+}))
+
 const IndicatorDisplay = ({ d, compareNodes, after, otherNodes }) => {
 
     const width = 250;
@@ -17,6 +35,8 @@ const IndicatorDisplay = ({ d, compareNodes, after, otherNodes }) => {
         getRateColor(compareNodes[0].mortality - 0.3 > 0.5 ? 0.5 : compareNodes[0].mortality - 0.3, d.mortalityColor),
         getRateColor(otherNodes[0].mortality - 0.3 > 0.5 ? 0.5 : otherNodes[0].mortality - 0.3, d.mortalityColor)
     ] : ['#c41c00', '#ff5722'];
+
+    const classes = useStyle();
 
     const BaseDesign = (x, y, width, height, v) => (<g>
         <circle cx={x-7} cy={y} r={7} fill={'rgb(0,0,0)'}/>
@@ -35,9 +55,17 @@ const IndicatorDisplay = ({ d, compareNodes, after, otherNodes }) => {
     </g>);
 
     const [widthTri, heightTri, strokeWidthTri] = [20, 10, 2];
-    const TriangleIndex = (x, y, fillColor) => (
+    const TriangleIndex = (x, y, fillColor, value) => (<Tooltip classes={{tooltip: classes.tooltip}}
+                                                         title={<table className={classes.tipTable}>
+                                                             <tbody>
+                                                             <tr>
+                                                                 <th>Value:</th>
+                                                                 <td>{value}</td>
+                                                             </tr>
+                                                             </tbody>
+                                                         </table>}>
         <polygon points={`${x},${y} ${x - widthTri / 2},${y - heightTri} ${x + widthTri / 2},${y - heightTri}`}
-                 fill={fillColor} stroke={'black'} strokeWidth={strokeWidthTri}/>);
+                 fill={fillColor} stroke={'black'} strokeWidth={strokeWidthTri}/></Tooltip>);
     // const TriangleIndex = (nodes, v) => {
     //     console.log(nodes)
     //     return nodes.map((data, did) => {
@@ -75,9 +103,10 @@ const IndicatorDisplay = ({ d, compareNodes, after, otherNodes }) => {
                                         const value = !!data.record ? data.record[0][v.column_id] : 0;
                                         const itemWidthRange = [v.range[0], v.range[1]];
                                         const ix = width * Math.max(Math.min((value - itemWidthRange[0]) / (itemWidthRange[1] - itemWidthRange[0]), 1), 0);
+
                                         console.log(value)
                                         // const mortalityColor = parseRateColor(data.mortality - 0.3 > 0.5 ? 0.5 : data.mortality - 0.3, d.mortalityColor);
-                                        return TriangleIndex(ix, height / 2, colors[0]);
+                                        return TriangleIndex(ix, height / 2, colors[0], Math.round(value * 100) / 100);
                                         // return <rect fill={colors[did]} x="0" y={5 + 5 * did} height={5} width={width * (Math.min((value - itemWidthRange[0]) / (itemWidthRange[1] - itemWidthRange[0]), 1))}> </rect>
                                     })
                                 }
@@ -87,7 +116,7 @@ const IndicatorDisplay = ({ d, compareNodes, after, otherNodes }) => {
                                         const itemWidthRange = [v.range[0], v.range[1]];
                                         const ix = width * Math.max(Math.min((value - itemWidthRange[0]) / (itemWidthRange[1] - itemWidthRange[0]), 1), 0);
                                         // const mortalityColor = parseRateColor(data.mortality - 0.3 > 0.5 ? 0.5 : data.mortality - 0.3, d.mortalityColor);
-                                        return TriangleIndex(ix, height / 2, colors[1]);
+                                        return TriangleIndex(ix, height / 2, colors[1], Math.round(value * 100) / 100);
                                         // return <rect fill={colors[did]} x="0" y={5 + 5 * did} height={5} width={width * (Math.min((value - itemWidthRange[0]) / (itemWidthRange[1] - itemWidthRange[0]), 1))}> </rect>
                                     })
                                 }
