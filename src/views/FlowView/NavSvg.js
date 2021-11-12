@@ -12,8 +12,8 @@ import ShortDis from './components/ShortDis';
 //     },
 // }));
 
-const NavSvg = React.forwardRef((props, ref) => {
-    const { children, width, height, initialScale, nodesProps } = props;
+const NavSvg = React.forwardRef((props,ref) => {
+    const {d, children, width, height, initialScale, nodesProps } = props;
     const svg = useRef(null);
     const rectRef = useRef(null);
     const { viewX, viewY, viewW, viewH, scale, reset, handleChangeScaleLevel ,displayShortChart} = useCamera(svg, width, height,rectRef);
@@ -21,6 +21,10 @@ const NavSvg = React.forwardRef((props, ref) => {
     useEffect(() => {
         handleChangeScaleLevel(initialScale);
     }, [initialScale])
+
+    useEffect(()=>{
+        reset();
+    },[d.grapth])
 
     return <>
         <ShortDis 
@@ -73,4 +77,4 @@ const NavSvg = React.forwardRef((props, ref) => {
     </>
 })
 
-export default NavSvg;
+export default inject('d')(observer(NavSvg));

@@ -19,7 +19,8 @@ export default function useCamera(svgEle, width, height, rectEle) {
     const initScale = useRef(1);
     const realScale = toRealScale(scaleLevel);
 
-    //tricky 右上角相对于本身的比例 
+    //tricky 右上角相对于本身的比例
+     
     const m_scale = useRef(isNaN(100 / height) ? 1 : 100 / height);
     useEffect(() => {
         m_scale.current = isNaN(100 / height) ? 1 : 100 / height;
