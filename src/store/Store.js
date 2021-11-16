@@ -7,7 +7,7 @@ class Store {
     constructor() {
         makeAutoObservable(this);
         this.initData();
-        this.filterInit();
+        // this.filterInit();
         document.oncontextmenu = e => e.preventDefault();
     }
 
@@ -87,6 +87,7 @@ class Store {
                                     if (res.succeed) {
                                         this.recordsState['MIMIC-IV'] = res.records;
                                         this.recordStateReady = true;
+                                        this.filterInit()
                                     }
                                 })
                             } else {
@@ -289,6 +290,7 @@ class Store {
         this.actionSequence = action;
     }
     getSequences = () => {
+        console.log(this.stateSequence)
         const occurSequences = [];
         const isPartOfSequence = (this.partOfSequence.slice().sort()).map(v => (len, idx) => idx >= v * len / 3 && idx <= (v + 1) * len / 3);
         if (this.stateSequence === null && this.actionSequence === null) {
