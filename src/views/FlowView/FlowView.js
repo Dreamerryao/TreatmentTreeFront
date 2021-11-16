@@ -141,6 +141,7 @@ function FlowView({ d }) {
         }
     }, [d]);
     const onClickAction = useCallback((stateData, actionData) => {
+        console.log(stateData.mortality)
         d.setStateActionSequence(stateData, actionData.action);
     })
 
@@ -215,7 +216,7 @@ function FlowView({ d }) {
                 }} />
             </NavSvg>
 
-            <Backdrop className={classes.backdrop} open={!d.initGraphReady || !d.recordIndexReady || !d.detailIndexReady}>
+            <Backdrop className={classes.backdrop} open={!d.initGraphReady || !d.recordIndexReady || !d.detailIndexReady || !d.recordStateReady}>
                 <CircularProgress color="inherit" />
             </Backdrop>
         </div>
